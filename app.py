@@ -38,27 +38,36 @@ model = load_model()
 
 # App title
 st.title("🧠 Brain Tumor Classifier")
+st.markdown("This application uses a pre-trained MobileNetV2 model to classify brain MRI images into four categories: Glioma Tumor, Meningioma Tumor, No Tumor, and Pituitary Tumor.")
+st.markdown("### A Labmentix Project made by Aswin K J")
 st.markdown("Upload a brain MRI or choose a sample image to detect tumor type.")
+
 
 # Upload section
 uploaded_file = st.file_uploader("📤 Upload your MRI image", type=['jpg', 'jpeg', 'png'])
 
-# Sample image selector
+# Sample image selector with 'None' option
 sample_dir = "sample_images"
 sample_options = os.listdir(sample_dir) if os.path.exists(sample_dir) else []
 selected_sample = st.selectbox("📁 Or choose a sample image:", ["None"] + sample_options)
 
-# Determine the image to use
+# Final image to predict
 image_to_predict = None
+image_source = ""
+
+# Uploaded image takes priority
 if uploaded_file:
     image_to_predict = Image.open(uploaded_file).convert("RGB")
+    image_source = "uploaded"
 elif selected_sample != "None":
     image_path = os.path.join(sample_dir, selected_sample)
     image_to_predict = Image.open(image_path).convert("RGB")
+    image_source = "sample"
 
-# Prediction section
+# Display & predict
 if image_to_predict:
-    st.image(image_to_predict, caption="Selected Image", use_column_width=True)
+    caption = "Uploaded MRI Image" if image_source == "uploaded" else f"Sample: {selected_sample}"
+    st.image(image_to_predict, caption=caption, use_column_width=True)
 
     img = image_to_predict.resize((224, 224))
     img_array = image.img_to_array(img)
@@ -75,3 +84,4 @@ if image_to_predict:
     st.markdown("### 🧪 Class Probabilities:")
     for i in range(len(class_names)):
         st.write(f"- {class_names[i]}: `{prediction[i] * 100:.2f}%`")
+
