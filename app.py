@@ -7,7 +7,7 @@ from tensorflow.keras.preprocessing import image
 # Load model
 @st.cache_resource
 def load_model():
-    model = tf.keras.models.load_model('model/mobilenet_cleaned.h5')
+    model = tf.keras.models.load_model('model/mobilenet.h5')
     return model
 
 model = load_model()
