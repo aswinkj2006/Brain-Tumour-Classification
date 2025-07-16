@@ -31,7 +31,7 @@ def load_model():
                   loss='categorical_crossentropy',
                   metrics=['accuracy'])
 
-    model.load_weights("model/mobilenet_weights.h5")
+    model.load_weights("model/mobilenet.weights.h5")
     return model
 
 model = load_model()
