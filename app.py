@@ -10,7 +10,7 @@ MODEL_PATH = 'model/best_model.h5'
 # Load model
 if not os.path.exists(MODEL_PATH):
     os.makedirs('model', exist_ok=True)
-    url = '15HoiqFPHHCZdt8SjHQR8tmLundbKiPBp'
+    url = 'https://drive.google.com/uc?id=https://drive.google.com/file/d/15HoiqFPHHCZdt8SjHQR8tmLundbKiPBp/view?usp=drive_link'
     gdown.download(url, MODEL_PATH, quiet=False)
 # Now load the model
 
