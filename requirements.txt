@@ -3,3 +3,4 @@ tensorflow==2.14.0
 pillow
 numpy
 pandas
+gdown

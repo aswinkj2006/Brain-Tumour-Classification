@@ -4,9 +4,17 @@ import numpy as np
 from tensorflow.keras.preprocessing import image
 from PIL import Image
 import os
+import gdown
 
+MODEL_PATH = 'model/best_model.h5'
 # Load model
-model = tf.keras.models.load_model('model/best_model.h5')
+if not os.path.exists(MODEL_PATH):
+    os.makedirs('model', exist_ok=True)
+    url = '15HoiqFPHHCZdt8SjHQR8tmLundbKiPBp'
+    gdown.download(url, MODEL_PATH, quiet=False)
+# Now load the model
+
+model = tf.keras.models.load_model(MODEL_PATH)
 
 # Define class names
 class_names = ['Glioma Tumor', 'Meningioma Tumor', 'No Tumor', 'Pituitary Tumor']
