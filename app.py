@@ -3,7 +3,8 @@ import tensorflow as tf
 import numpy as np
 import os
 from PIL import Image
-from tensorflow.keras.applications import MobileNetV2
+from tensorflow.keras.applications import EfficientNetB0
+from tensorflow.keras.applications.efficientnet import preprocess_input
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, GlobalAveragePooling2D, Dense, Dropout
 from tensorflow.keras.optimizers import Adam
@@ -16,7 +17,7 @@ class_names = ['Glioma Tumor', 'Meningioma Tumor', 'No Tumor', 'Pituitary Tumor'
 @st.cache_resource
 def load_model():
     input_tensor = Input(shape=(224, 224, 3))
-    base_model = MobileNetV2(weights='imagenet', include_top=False, input_tensor=input_tensor)
+    base_model = EfficientNetB0(weights='imagenet', include_top=False, input_tensor=input_tensor)
     base_model.trainable = False
 
     x = base_model.output
@@ -31,17 +32,16 @@ def load_model():
                   loss='categorical_crossentropy',
                   metrics=['accuracy'])
 
-    model.load_weights("model/mobilenet.weights.h5")
+    model.load_weights("model/efficientnet.weights.h5")  # Update path if needed
     return model
 
 model = load_model()
 
 # App title
 st.title("🧠 Brain Tumor Classifier")
-st.markdown("This application uses a pre-trained MobileNetV2 model to classify brain MRI images into four categories: Glioma Tumor, Meningioma Tumor, No Tumor, and Pituitary Tumor.")
+st.markdown("This application uses a pre-trained **EfficientNetB0** model to classify brain MRI images into four categories: **Glioma Tumor**, **Meningioma Tumor**, **No Tumor**, and **Pituitary Tumor**.")
 st.markdown("### A Labmentix Project made by Aswin K J")
 st.markdown("Upload a brain MRI or choose a sample image to detect tumor type.")
-
 
 # Upload section
 uploaded_file = st.file_uploader("📤 Upload your MRI image", type=['jpg', 'jpeg', 'png'])
@@ -71,7 +71,7 @@ if image_to_predict:
 
     img = image_to_predict.resize((224, 224))
     img_array = image.img_to_array(img)
-    img_array = tf.keras.applications.mobilenet_v2.preprocess_input(img_array)
+    img_array = preprocess_input(img_array)  # Use EfficientNet's preprocessing
     img_array = np.expand_dims(img_array, axis=0)
 
     prediction = model.predict(img_array)[0]
@@ -84,4 +84,3 @@ if image_to_predict:
     st.markdown("### 🧪 Class Probabilities:")
     for i in range(len(class_names)):
         st.write(f"- {class_names[i]}: `{prediction[i] * 100:.2f}%`")
-
